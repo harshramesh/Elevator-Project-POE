@@ -39,9 +39,8 @@ task main() {
 
 void moveElev(int floorNum, int direction) {
 	int floorVal = /*TODO ShaftEncoder Stuff*/0;
-	while(SensorValue[Shaft] != floorVal) {
-		startMotor(Elev, 30 * direction);
-	}
+	while(SensorValue[Shaft] != floorVal)
+	  startMotor(Elev, 30 * direction);
 	stopMotor(Elev);
 	lights(floorNum);
 }
