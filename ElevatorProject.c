@@ -20,105 +20,60 @@ void lights(int floorNum);
 
 int floorTo = 1, curFloor = 1;
 
-task main()
-{
-while(true)
-{
-	if(curFloor == 1)
-	{
-		
-		while(!(sens[First] || sens[Second] || sens[Third]));
-		floorTo = (sens[First]) ? 1 : (sens[Second]) ? 2 : 3;
-	
-	}
-	else
-	{
-		
-		ClearTimer(T1);
-		while(!(sens[First] || sens[Second] || sens[Third]))
-			if(time1[T1] > 30000) break;
-		if(time1[T1] > 30000) floorTo = 1;
-		else floorTo = ((sens[First]) ? 1 : (sens[Second]) ? 2 : 3);
-	
-	}
-	
-	moveElev(floorTo, (floorTo > curFloor) ? -1 : (floorTo < curFloor) ? 1 : 0);
-	curFloor = floorTo;
-
-}
+task main() {
+  while(true) {
+    if(curFloor == 1) {
+      while(!(sens[First] || sens[Second] || sens[Third]));
+      floorTo = (sens[First]) ? 1 : (sens[Second]) ? 2 : 3;
+    } else {
+      ClearTimer(T1);
+      while(!(sens[First] || sens[Second] || sens[Third]))
+	if(time1[T1] > 30000) break;
+      if(time1[T1] > 30000) floorTo = 1;
+      else floorTo = ((sens[First]) ? 1 : (sens[Second]) ? 2 : 3);
+    }
+    moveElev(floorTo, (floorTo > curFloor) ? -1 : (floorTo < curFloor) ? 1 : 0);
+    curFloor = floorTo;
+  }
 }
 
-void moveElev(int floorNum, int direction)
-{
-
+void moveElev(int floorNum, int direction) {
 	int floorVal = /*TODO ShaftEncoder Stuff*/0;
-	while(SensorValue[Shaft] != floorVal)
-	{
-
+	while(SensorValue[Shaft] != floorVal) {
 		startMotor(Elev, 30 * direction);
-
 	}
-
 	stopMotor(Elev);
 	lights(floorNum);
-
 }
 
-void lights(int floorNum)
-{
-
-	if(floorNum < 3)
-	{
-
+void lights(int floorNum) {
+	
+	if(floorNum < 3) {
 		ledOff(O3);
 		ledOn(D3);
-
-	}
-	else
-	{
-		
+	} else {
 		ledOff(D3);
 		ledOn(O3);
-	
 	}
 	
-	if(floorNum > 2)
-	{
-
+	if(floorNum > 2) {
 		ledOff(O2);
 		ledOff(D2);
 		ledOn(U2);
-
-	}
-	else if(floorNum < 2)
-	{
-
+	} else if(floorNum < 2) {
 		ledOff(O2);
 		ledOff(U2);
 		ledOn(D2);
-
-	}
-	else
-	{
-		
+	} else {
 		ledOff(U1);
 		ledOff(D2);
 		ledOn(O1);
-	
 	}
-	if(floorNum > 1)
-	{
-
+	if(floorNum > 1) {
 		ledOff(O1);
 		ledOn(U1);
-
-	}
-	else
-	{
-		
+	} else {
 		ledOff(U1);
 		ledOn(O1);
-	
 	}
-
 }
