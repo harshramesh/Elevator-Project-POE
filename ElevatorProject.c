@@ -68,6 +68,7 @@ void lights(int floorNum) {
 		ledOff(D2);
 		ledOn(O1);
 	}
+	
 	if(floorNum > 1) {
 		ledOff(O1);
 		ledOn(U1);
