@@ -21,15 +21,15 @@ void lights(int floorNum);
 int floorTo = 1, curFloor = 1;
 
 task main() {
-  while(true) {
-    if(curFloor == 1) {
-      while(!(sens[First] || sens[Second] || sens[Third]));
+  while (1) {
+    if (curFloor == 1) {
+      while (!(sens[First] || sens[Second] || sens[Third]));
       floorTo = (sens[First]) ? 1 : (sens[Second]) ? 2 : 3;
     } else {
       ClearTimer(T1);
-      while(!(sens[First] || sens[Second] || sens[Third]))
-	if(time1[T1] > 30000) break;
-      if(time1[T1] > 30000) floorTo = 1;
+      while (!(sens[First] || sens[Second] || sens[Third]))
+	if (time1[T1] > 30000) break;
+      if (time1[T1] > 30000) floorTo = 1;
       else floorTo = ((sens[First]) ? 1 : (sens[Second]) ? 2 : 3);
     }
     moveElev(floorTo, (floorTo > curFloor) ? -1 : (floorTo < curFloor) ? 1 : 0);
@@ -39,7 +39,7 @@ task main() {
 
 void moveElev(int floorNum, int direction) {
 	int floorVal = /*TODO ShaftEncoder Stuff*/0;
-	while(SensorValue[Shaft] != floorVal)
+	while (SensorValue[Shaft] != floorVal)
 	  startMotor(Elev, 30 * direction);
 	stopMotor(Elev);
 	lights(floorNum);
@@ -47,7 +47,7 @@ void moveElev(int floorNum, int direction) {
 
 void lights(int floorNum) {
 	
-	if(floorNum < 3) {
+	if (floorNum < 3) {
 		ledOff(O3);
 		ledOn(D3);
 	} else {
@@ -55,7 +55,7 @@ void lights(int floorNum) {
 		ledOn(O3);
 	}
 	
-	if(floorNum > 2) {
+	if (floorNum > 2) {
 		ledOff(O2);
 		ledOff(D2);
 		ledOn(U2);
@@ -69,7 +69,7 @@ void lights(int floorNum) {
 		ledOn(O1);
 	}
 	
-	if(floorNum > 1) {
+	if (floorNum > 1) {
 		ledOff(O1);
 		ledOn(U1);
 	} else {
