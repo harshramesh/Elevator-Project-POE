@@ -16,59 +16,71 @@
 #define ledOff turnLEDOff
 #define sens SensorValue
 
+// Moves the elevator
 void moveElev(int floorNum, int direction, int curFloor);
+// Turns the lights on and off
 void lights(int floorNum);
-
+// Goal floor and current floor
 int floorTo = 1, curFloor = 1;
 
 task main()
 {
-while(true)
-{
-	if(curFloor == 1)
+	while(true)
 	{
-
-		while(!(sens[First] || sens[Second] || sens[Third]));
-		floorTo = (sens[First]) ? 1 : (sens[Second]) ? 2 : (sens[Third]) ? 3 : curFloor;
-
+		if(curFloor == 1)
+		{
+			// Waits for a request
+			while(!(sens[First] || sens[Second] || sens[Third]));
+			// Moves to a floor
+			floorTo = (sens[First]) ? 1 : (sens[Second]) ? 2 : (sens[Third]) ? 3 : curFloor;
+	
+		}
+		else
+		{
+			// Starts the safety timer
+			ClearTimer(T1);
+			// Waits for a request. Also looks if the time exceeds the safety limit.
+			while(!(sens[First] || sens[Second] || sens[Third]))
+				if(time1[T1] > 30000) break;
+			// Goes to floor 1
+			if(time1[T1] > 30000) floorTo = 1;
+			// Goes to the requested floor
+			else floorTo = ((sens[First]) ? 1 : (sens[Second]) ? 2 : (sens[Third]) ? 3 : curFloor);
+	
+		}
+		// Moves 
+		moveElev(floorTo, (floorTo > curFloor) ? -1 : (floorTo < curFloor) ? 1 : 0, curFloor);
+		// Sets the current floor
+		curFloor = floorTo;
+	
 	}
-	else
-	{
-
-		ClearTimer(T1);
-		while(!(sens[First] || sens[Second] || sens[Third]))
-			if(time1[T1] > 30000) break;
-		if(time1[T1] > 30000) floorTo = 1;
-		else floorTo = ((sens[First]) ? 1 : (sens[Second]) ? 2 : (sens[Third]) ? 3 : curFloor);
-
-	}
-
-	moveElev(floorTo, (floorTo > curFloor) ? -1 : (floorTo < curFloor) ? 1 : 0, curFloor);
-	curFloor = floorTo;
-
-}
 }
 
+// Moves the elevator
 void moveElev(int floorNum, int direction, int curFloor)
 {
-
+	// Gets the value of the floor
 	int floorVal = abs(curFloor - floorNum);
+	// Resets the shaft encoder
 	sens[Shaft] = 0;
+	// Moves
 	while(SensorValue[Shaft] < ((direction == 1) ? 225 : 250) * floorVal)
 	{
 
 		startMotor(Elev, 15 * direction);
 
 	}
-
+	// Stops
 	stopMotor(Elev);
+	// Activates lights
 	lights(floorNum);
 
 }
 
+// Sets the lights
 void lights(int floorNum)
 {
-
+	// Floor < 3
 	if(floorNum < 3)
 	{
 
@@ -76,6 +88,7 @@ void lights(int floorNum)
 		ledOn(D3);
 
 	}
+	// Floor is 3
 	else
 	{
 
@@ -83,7 +96,7 @@ void lights(int floorNum)
 		ledOn(O3);
 
 	}
-
+	// Floor is 3
 	if(floorNum > 2)
 	{
 
@@ -92,6 +105,7 @@ void lights(int floorNum)
 		ledOn(U2);
 
 	}
+	// Floor is 1
 	else if(floorNum < 2)
 	{
 
@@ -100,6 +114,7 @@ void lights(int floorNum)
 		ledOn(D2);
 
 	}
+	// Floor is 2
 	else
 	{
 
@@ -108,6 +123,7 @@ void lights(int floorNum)
 		ledOn(O1);
 
 	}
+	// Floor is 2 or 3
 	if(floorNum > 1)
 	{
 
@@ -115,6 +131,7 @@ void lights(int floorNum)
 		ledOn(U1);
 
 	}
+	// Floor is 1
 	else
 	{
 
