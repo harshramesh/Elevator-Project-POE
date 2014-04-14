@@ -21,7 +21,7 @@ void moveElev(int floorNum, int direction, int curFloor);
 void lights(int floorNum);
 // Goal floor and current floor
 int floorTo = 1, curFloor = 1;
-
+// Program start
 task main()
 {
 	while(true)
